@@ -203,9 +203,31 @@ describe('Recipe List', function() {
     };
     return chai
       .request(app)
-      .get('/recipes')
-      .then(function(res) {
+      .get("/recipes")
+      .then(function(res){
         updateData.id = res.body[0].id;
+        return chai
+          .request(app)
+          .put(`/recipes/${updateData.id}`)
+          .send(updateData)
+          .then(function(res) {
+            expect(res).to.have.status(204);
+          });
+       });
+  });
+
+  it('should delete recipe on Delete', function(){
+    return chai
+      .request(app)
+      .get("/recipes")
+      .then(function(res){
+          let deleteId = res.body[0].id;
+          return chai
+          .request(app)
+          .delete(`/recipes/${deleteId}`)
+          .then(function(res){
+            expect(res).to.have.status(204);
+          });
       });
   });
 });
